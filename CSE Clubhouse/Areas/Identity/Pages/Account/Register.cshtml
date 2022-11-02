@@ -1,0 +1,80 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-1">
+                <label asp-for="Input.FirstName"></label>
+                <input asp-for="Input.FirstName" class="form-control" autocomplete="firstname" aria-required="true" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-1">
+                <label asp-for="Input.LastName"></label>
+                <input asp-for="Input.LastName" class="form-control" autocomplete="lastname" aria-required="true" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.BirthDay"></label>
+                <input type="date" asp-for="Input.BirthDay" class="form-control" autocomplete="birthday" aria-required="true" />
+                <span asp-validation-for="Input.BirthDay" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.Gender">Gender</label> <br />
+                @foreach(var gender in Model.Genders)
+                {
+                    <input type="radio" asp-for="Input.Gender" value="@gender" />  @gender
+                }
+                <span asp-validation-for="Input.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.Position"></label>
+                <select class="form-select" asp-for="Input.Position">
+                    <option value="None">None</option>
+                    <option value="Student">Student</option>
+                    <option value="Faculty">Faculty</option>
+                    <option value="Alumni">Alumni</option>
+                </select>
+                <span asp-validation-for="Input.Position" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.CollegeId"></label>
+                <input asp-for="Input.CollegeId" class="form-control" autocomplete="collegeid" />
+                <span asp-validation-for="Input.CollegeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.AdmissionYear"></label>
+                <input type="month" asp-for="Input.AdmissionYear" class="form-control" autocomplete="admissionyear" />
+                <span asp-validation-for="Input.AdmissionYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ConfirmPassword"></label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-md btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

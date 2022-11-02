@@ -1,0 +1,87 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<partial name="_StatusMessage" model="Model.UserNameChangeLimitMessage" />
+<partial name="_StatusMessage" for="StatusMessage" />
+<form id="profile-form" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.FirstName"></label>
+                <input asp-for="Input.FirstName" class="form-control" autocomplete="firstname" aria-required="true" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.LastName"></label>
+                <input asp-for="Input.LastName" class="form-control" autocomplete="lastname" aria-required="true" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.BirthDay"></label>
+                <input type="date" asp-for="Input.BirthDay" class="form-control" autocomplete="birthday" aria-required="true" />
+                <span asp-validation-for="Input.BirthDay" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.Position"></label>
+                <select class="form-select" asp-for="Input.Position">
+                    <option value="None">None</option>
+                    <option value="Student">Student</option>
+                    <option value="Faculty">Faculty</option>
+                    <option value="Alumni">Alumni</option>
+                </select>
+                <span asp-validation-for="Input.Position" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.CollegeId"></label>
+                <input asp-for="Input.CollegeId" class="form-control" autocomplete="collegeid" />
+                <span asp-validation-for="Input.CollegeId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.AdmissionYear"></label>
+                <input type="month" asp-for="Input.AdmissionYear" class="form-control" autocomplete="admissionyear" />
+                <span asp-validation-for="Input.AdmissionYear" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.Username" class="form-label"></label>
+                <input asp-for="Input.Username" class="form-control" />
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                <input asp-for="Input.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.ProfilePicture" style="width: 100%;"></label>
+                @if (Model.Input.ProfilePicture != null)
+                {
+                    <img id="profilePicture" class="mt-4 rounded-1" style="width:300px;height:300px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.ProfilePicture))">
+                }
+                else
+                {
+                    <img id="profilePicture" style="width:350px;height:350px; object-fit:cover" src="/blank-profile-picture-973460_1280.png">
+                }
+                <input type="file"
+                    accept=".png,.jpg,.jpeg,.gif,.tif"
+                    asp-for="Input.ProfilePicture"
+                    class="form-control"
+                    style=""
+                    onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+                <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+            </div>
+         </div>
+        <button id="update-profile-button" type="submit" class="w-80 btn btn-md btn-primary mt-3">Save</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
