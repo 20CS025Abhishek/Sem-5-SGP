@@ -140,6 +140,10 @@ namespace CSE_Clubhouse.Migrations
                     b.Property<string>("ContactPerson")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CoverImgURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

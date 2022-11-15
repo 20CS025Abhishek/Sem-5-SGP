@@ -18,4 +18,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Clubs\Covers\" />
+    <Folder Include="wwwroot\Clubs\Gallery\" />
+  </ItemGroup>
+
 </Project>

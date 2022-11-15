@@ -18,12 +18,14 @@ namespace CSE_Clubhouse.Controllers
         private readonly DbSet<ClubMember> _clubhouseContexts;
         private readonly UserManager<ClubhouseUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ClubsController(ClubhouseContext context, UserManager<ClubhouseUser> userManager, RoleManager<IdentityRole> roleManager)
+		public ClubsController(ClubhouseContext context, UserManager<ClubhouseUser> userManager, RoleManager<IdentityRole> roleManager, IWebHostEnvironment webHostEnvironment)
 		{
 			_context = context;
 			_userManager = userManager;
 			_roleManager = roleManager;
+			_webHostEnvironment = webHostEnvironment;
 			_clubhouseContexts = _context.Set<ClubMember>();
 		}
 
@@ -93,11 +95,17 @@ namespace CSE_Clubhouse.Controllers
 		[Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Tagline,Description,Goals,Domains,Location,ContactPerson,Email,ContactNo,UpdatedDate,IsDeleted")] Club club)
+        public async Task<IActionResult> Create(Club club)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(club);
+                if (club.CoverImg != null)
+				{
+			        string localPath = "Clubs/Covers/";
+					club.CoverImgURL = await UploadImage(localPath, club.CoverImg);
+				}
+
+				_context.Add(club);
                 await _context.SaveChangesAsync();
                 var modName = club.Name + "Moderator";
                 club.ClubModRole = modName;
@@ -108,7 +116,17 @@ namespace CSE_Clubhouse.Controllers
             return View(club);
         }
 
-        [Authorize(Roles = "Admin, ClubModerator")]
+		private async Task<string> UploadImage(string localPath, IFormFile imgFile)
+		{
+			localPath += Guid.NewGuid().ToString() + imgFile.FileName;
+			string serverPath = Path.Combine(_webHostEnvironment.WebRootPath, localPath);
+
+			await imgFile.CopyToAsync(new FileStream(serverPath, FileMode.Create));
+
+			return "/" + localPath;
+		}
+
+		[Authorize(Roles = "Admin, ClubModerator")]
 
         // GET: Clubs/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -118,12 +136,14 @@ namespace CSE_Clubhouse.Controllers
                 return NotFound();
             }
 
-            var club = await _context.Club.FindAsync(id);
-            if (club == null)
+
+            var ogClub = await _context.Club.FindAsync(id);
+            if (ogClub == null)
             {
                 return NotFound();
             }
-            return View(club);
+			TempData["URL"] = ogClub.CoverImgURL; 
+            return View(ogClub);
         }
 
         // POST: Clubs/Edit/5
@@ -132,8 +152,9 @@ namespace CSE_Clubhouse.Controllers
         [Authorize(Roles = "Admin, ClubModerator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Tagline,Description,Goals,Domains,Location,ContactPerson,Email,ContactNo,UpdatedDate,IsDeleted")] Club club)
+        public async Task<IActionResult> Edit(int id, Club club)
         {
+            var URL = TempData["URL"].ToString();
             if (id != club.Id)
             {
                 return NotFound();
@@ -143,6 +164,15 @@ namespace CSE_Clubhouse.Controllers
             {
                 try
                 {
+                    if (club.CoverImg != null)
+                    {
+                        string localPath = "Clubs/Covers/";
+                        club.CoverImgURL = await UploadImage(localPath, club.CoverImg);
+                    }
+					else
+					{
+                        club.CoverImgURL = URL;
+					}
                     _context.Update(club);
                     await _context.SaveChangesAsync();
                 }

@@ -17,7 +17,6 @@ namespace CSE_Clubhouse.Controllers
         private readonly ClubhouseContext _context;
         private readonly UserManager<ClubhouseUser> _userManager;
 
-
         public ClubMembersController(ClubhouseContext context, UserManager<ClubhouseUser> userManager)
         {
             _context = context;

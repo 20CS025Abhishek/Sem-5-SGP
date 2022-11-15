@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSE_Clubhouse.Models
 {
@@ -25,7 +26,10 @@ namespace CSE_Clubhouse.Models
 		public bool IsDeleted { get; set; }
 		public string? ClubModRole { get; set; }
 		// Logo
-		//public byte[]? ClubProfilePicture { get; set; }
+		public string? CoverImgURL { get; set; }
+		[NotMapped]
+		[Display(Name="Cover Image")]
+		public IFormFile? CoverImg { get; set; }
 		// Slideshow Images
 	}
 }

@@ -10,8 +10,10 @@ namespace CSE_Clubhouse
 			var builder = WebApplication.CreateBuilder(args);
                var connectionString = builder.Configuration.GetConnectionString("ClubhouseContextConnection") ?? throw new InvalidOperationException("Connection string 'ClubhouseContextConnection' not found.");
 
-                           builder.Services.AddDbContext<ClubhouseContext>(options =>
-                options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<ClubhouseContext>(options =>
+			{
+                options.UseSqlServer(connectionString);
+			});
 
 			builder.Services.AddIdentity<Areas.Identity.Data.ClubhouseUser, IdentityRole>(options =>
 			{
